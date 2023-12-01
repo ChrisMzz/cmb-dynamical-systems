@@ -16,12 +16,19 @@ def split_time_view():
     axA1.set_title("A1"), axA2.set_title("A2")
     return fig, ((axQ0,axQ1,axA1),(axQ2,axQ3,axA2))
 
-def time_view():
+def time_view(scale=False):
+    """Graph Q and A in time (Q superposed in one graph). Scale option displays proportion of Q (easier to compare).
+    """
     fig, (axQ,axA) = plt.subplots(1,2)
-    axQ.plot(t,Q0), axQ.plot(t,Q1), axQ.plot(t,Q2), axQ.plot(t,Q3)
-    axA.plot(t,A1),axA.plot(t,A2)
+    if not scale:
+        axQ.plot(t,Q0, label='Q0'), axQ.plot(t,Q1, label='Q1'), axQ.plot(t,Q2, label='Q2'), axQ.plot(t,Q3, label='Q3')
+    else:
+        sQ = Q0+Q1+Q2+Q3
+        axQ.plot(t,Q0/sQ, label='Q0'), axQ.plot(t,Q1/sQ, label='Q1'), axQ.plot(t,Q2/sQ, label='Q2'), axQ.plot(t,Q3/sQ, label='Q3')
+    axA.plot(t,A1, label='A1'),axA.plot(t,A2, label='A2')
     axQ.set_title("Q")
     axA.set_title("A")
+    axQ.legend(), axA.legend()
     return fig, (axQ,axA)
 
 
@@ -44,15 +51,15 @@ def f(Y,t):
         (alpha2b*Q[2]+alpha3b*Q[3])*A[2]*(1-A[2]/tauA2)
     ])
 
-eps = 0.1
+eps = 0.001
 rho = lambda x : (1+x/np.sqrt(x**2+eps))/2 # multiplicative regularisation term
 
 
-pi0, pi1, pi2 = 0.5, 0.3, 0.4 # transfer terms
-alpha1, alpha2, alpha3, alpha2b, alpha3b = 0.1, 0.2, 0.3, 0.2, 0.1 # axon growth dynamics
-beta1, beta2 = 2.5, 3       # inhibition terms
-gamma2, gamma3 = 0.1, 0.2   # proliferation terms
-delta0, delta2 = 0.2, 0.2   # activation terms
+pi0, pi1, pi2 = 1.5e-3, 1.9e-5, 1.1e-3 # transfer terms
+alpha1, alpha2, alpha3, alpha2b, alpha3b = 1.6e-5, 8.4e-2, 4.7e-4, 6.0e-1, 1.6e-5 # axon growth dynamics
+beta1, beta2 = 3.2, 2.2             # inhibition terms
+gamma2, gamma3 = 4.2e-1, 9.3e-1     # proliferation terms
+delta0, delta2 = 8.4, 3.2           # activation terms
 
 # transfer dynamics (with inhibition/activation)
 f0 = lambda Q2, Q3 : pi0*(1+delta0*(Q2+Q3)/(1+Q2+Q3))
@@ -62,15 +69,18 @@ f2 = lambda A1, A2 : pi2*(beta2*A1*rho(A1)+delta2*A2)
 
 # saturation term and thresholds limiting tumor growth factors
 tauC, [[tauA1,  tauA2], 
-       [tauCA1, tauCA2]] = 0.1, [[0.5,0.3],
-                                 [1,0.5]]
+       [tauCA1, tauCA2]] = 8.5e1, [[0.3,1.9],
+                                   [3.6e-1,1.6]]
 
+# Check ranges
+params = (pi0, pi1, pi2, alpha1, alpha2, alpha3, alpha2b, alpha3b, beta1, beta2, gamma2, gamma3, delta0, delta2, tauC, tauA1, tauA2, tauCA1, tauCA2)
+check_in_range(params)
 
 # Check hypotheses
 if not IGNORE_MODEL_ERRORS:
     # H1
-    if not (1 < beta1*tauA1) or not (1 < beta2*tauA1) : 
-        raise HypothesisError("We don't have 1 < min(beta1*tauA1, beta2*tauA1)", 1)
+    if not (1 > beta1*tauA1) or not (1 > beta2*tauA1) : 
+        raise HypothesisError("We don't have 1 > max(beta1*tauA1, beta2*tauA1)", 1)
     # H2
     if not (gamma2 < gamma3) : 
         raise HypothesisError("We don't have gamma2 < gamma3", 2)
@@ -84,9 +94,9 @@ if not IGNORE_MODEL_ERRORS:
 
 Y0 = [2,0,0,0]+[0,0.05]
 
-t = np.linspace(0,60,50)
+t = np.linspace(0,60,500)
 
-Yest = spi.odeint(f,Y0,t)
+Yest = spi.odeint(f,Y0,t) # use Euler explicit ??
 Q0,Q1,Q2,Q3 = Yest[:,0], Yest[:,1], Yest[:,2], Yest[:,3]
 A1, A2 = Yest[:,4], Yest[:,5]
 
@@ -103,8 +113,7 @@ if not IGNORE_MODEL_ERRORS:
         raise BehaviouralError("0<A2<tauA1 is not respected")
     
 
-
-time_view()
+time_view(True)
 plt.show()
 
 
