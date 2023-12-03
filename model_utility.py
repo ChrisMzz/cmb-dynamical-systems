@@ -48,3 +48,28 @@ def exception_handler(exception_type, exception, traceback):
      else default_hook(exception_type, exception, traceback)]
 sys.excepthook = exception_handler
 
+def log_mouse(mouse:dict):
+    try:
+        print(mouse["name"])
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['pi0', 'pi1', 'pi2']], print()
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['alpha1', 'alpha2', 'alpha3', 'alpha2b', 'alpha3b']], print()
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['beta1', 'beta2']], print()
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['gamma2', 'gamma3']], print()
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['delta0', 'delta2']], print()
+        [print(f"{p}:{mouse[p]} ", end='') for p in ['tauC', 'tauA1', 'tauA2', 'tauCA1', 'tauCA2']], print()
+        print()
+    except:
+        print("Failed to log mouse.")
+
+def load_mouse(mouse:dict):
+    try:
+        return [mouse[p] for p in ['pi0', 'pi1', 'pi2',
+                                   'alpha1', 'alpha2', 'alpha3', 'alpha2b', 'alpha3b',
+                                   'beta1', 'beta2',
+                                   'gamma2', 'gamma3',
+                                   'delta0', 'delta2',
+                                   'tauC', 'tauA1', 'tauA2', 'tauCA1', 'tauCA2']]
+    except:
+        print("Failed to load mouse parameters.")
+    
+    
