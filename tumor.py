@@ -9,6 +9,8 @@ IGNORE_MODEL_ERRORS = False
 
 
 def split_time_view(scale=False):
+    """Graph all relevant curves (Q0,Q1,Q2,Q3,A1,A2) wrt time separately.
+    """
     fig, ((axQ0,axQ1,axA1),(axQ2,axQ3,axA2)) = plt.subplots(2,3)
     if not scale:
         axQ0.plot(t,Q0, color=(0,0,1)), axQ1.plot(t,Q1, color=(1,0.6,0.2))
@@ -25,6 +27,10 @@ def split_time_view(scale=False):
     return fig, ((axQ0,axQ1,axA1),(axQ2,axQ3,axA2))
 
 def split_time_view_reuse(fig, axes, scale=False):
+    """Graph all relevant curves (Q0,Q1,Q2,Q3,A1,A2) wrt time separately.
+    
+    Takes figure and axes as argument so it can be reused with different data.
+    """
     fig, ((axQ0,axQ1,axA1),(axQ2,axQ3,axA2)) = fig, axes
     if not scale:
         axQ0.plot(t,Q0, color='black'), axQ1.plot(t,Q1, color='black')

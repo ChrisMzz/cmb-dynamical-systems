@@ -20,6 +20,12 @@ class ParameterRangeWarning(UserWarning):
     """
 
 def check_in_range(params):
+    """Checks that all parameters are in the correct ranges. Warns user for each discrepency.
+
+        Make sure to give parameters in the following order :
+        pi0, pi1, pi2, alpha1, alpha2, alpha3, alpha2b, alpha3b, beta1, beta2,
+        gamma2, gamma3, delta0, delta2, tauC, tauA1, tauA2, tauCA1, tauCA2
+    """
     pi0, pi1, pi2, alpha1, alpha2, alpha3, alpha2b, alpha3b, beta1, beta2, \
         gamma2, gamma3, delta0, delta2, tauC, tauA1, tauA2, tauCA1, tauCA2 = params
     if not (tauA1 == 0.3): warnings.warn('tauA1 is not 0.3', ParameterRangeWarning, stacklevel=2)
@@ -49,6 +55,8 @@ def exception_handler(exception_type, exception, traceback):
 sys.excepthook = exception_handler
 
 def log_mouse(mouse:dict):
+    """Keeps log of given mouse, represented by its name and parameters.
+    """
     try:
         print(mouse["name"])
         [print(f"{p}:{mouse[p]} ", end='') for p in ['pi0', 'pi1', 'pi2']], print()
@@ -61,7 +69,9 @@ def log_mouse(mouse:dict):
     except:
         print("Failed to log mouse.")
 
-def load_mouse(mouse:dict):
+def load_mouse(mouse:dict) -> list:
+    """Load in set of parameters for range check and simulation from a dict (typically JSON imported).
+    """
     try:
         return [mouse[p] for p in ['pi0', 'pi1', 'pi2',
                                    'alpha1', 'alpha2', 'alpha3', 'alpha2b', 'alpha3b',
@@ -71,5 +81,6 @@ def load_mouse(mouse:dict):
                                    'tauC', 'tauA1', 'tauA2', 'tauCA1', 'tauCA2']]
     except:
         print("Failed to load mouse parameters.")
+        return []
     
     
