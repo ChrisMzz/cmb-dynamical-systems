@@ -5,7 +5,7 @@ from model_utility import *
 import json
 
 
-IGNORE_MODEL_ERRORS = False
+IGNORE_MODEL_ERRORS = True
 
 
 def split_time_view(scale=False):
@@ -81,7 +81,7 @@ def f(Y,t):
         gamma2*Q[2]*(1-(Q[2]+Q[3])/tauC + A[1]/tauCA1 + A[2]/tauCA2) + f1(A[1])*Q[1] - f2(A[1], A[2])*Q[2],
         gamma3*Q[3]*(1-(Q[2]+Q[3])/tauC + A[1]/tauCA1 + A[2]/tauCA2) + f2(A[1], A[2])*Q[2],
         
-        (alpha1*Q[1]+alpha2*Q[2]+alpha3*Q[3])*(1-A[1]/tauA1)*(1+A[1]/tauA1),
+        (alpha1*Q[1]+alpha2*Q[2]-alpha3*Q[3])*(1-A[1]/tauA1)*(1+A[1]/tauA1),
         (alpha2b*Q[2]+alpha3b*Q[3])*A[2]*(1-A[2]/tauA2)
     ])
 
