@@ -131,6 +131,9 @@ with open('mice.json') as fp:
         param_space = interpolate.interp1d([0, 1], sweep_ranges[param_name])
         
         fig, AX = plt.subplots(2,3)
+        fig.set_figheight(8)
+        fig.set_figwidth(10)
+        
         for current in param_space(x):
             mouse[param_name] = current
             (pi0, pi1, pi2, alpha1, alpha2, alpha3, alpha2b, alpha3b, beta1, beta2, gamma2, gamma3, delta0, delta2, tauC, tauA1, tauA2, tauCA1, tauCA2) = load_mouse(mouse)
@@ -153,7 +156,7 @@ with open('mice.json') as fp:
         axQ2.plot(t,Q2, color='blue'), axQ3.plot(t,Q3, color='blue')
         axA1.plot(t,A1, color='blue'), axA2.plot(t,A2, color='blue')
         fig.supxlabel("Time in days")
-        fig.suptitle(f"{latex[param_name]} sweep from {sweep_ranges[param_name][0]} (red) to {sweep_ranges[param_name][1]} (blue) ; linear interpolation")
+        fig.suptitle(f"{latex[param_name]} sweep from {sweep_ranges[param_name][0]} (blue) to {sweep_ranges[param_name][1]} (red) ; linear interpolation")
         if len(sys.argv) > 2:
             if sys.argv[2] == "linear":
                 if len(sys.argv) > 3: fig.savefig(f"sim_dump/sweep/{mouse['name']}_{sys.argv[1]}_linear_sweep.png", dpi=300, format='png')
@@ -162,6 +165,8 @@ with open('mice.json') as fp:
         plt.close(fig)
         
         fig, AX = plt.subplots(2,3)
+        fig.set_figheight(8)
+        fig.set_figwidth(10)
         for current in param_space(x**2):
             mouse[param_name] = current
             (pi0, pi1, pi2, alpha1, alpha2, alpha3, alpha2b, alpha3b, beta1, beta2, gamma2, gamma3, delta0, delta2, tauC, tauA1, tauA2, tauCA1, tauCA2) = load_mouse(mouse)
@@ -183,7 +188,7 @@ with open('mice.json') as fp:
         axQ0.plot(t,Q0, color='blue'), axQ1.plot(t,Q1, color='blue')
         axQ2.plot(t,Q2, color='blue'), axQ3.plot(t,Q3, color='blue')
         axA1.plot(t,A1, color='blue'), axA2.plot(t,A2, color='blue')
-        fig.suptitle(f"{latex[param_name]} sweep from {sweep_ranges[param_name][0]} (red) to {sweep_ranges[param_name][1]} (blue) ; quadratic interpolation")
+        fig.suptitle(f"{latex[param_name]} sweep from {sweep_ranges[param_name][0]} (blue) to {sweep_ranges[param_name][1]} (red) ; quadratic interpolation")
         fig.supxlabel("Time in days")
         if len(sys.argv) > 2:
             if sys.argv[2] == "quadratic":
